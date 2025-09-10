@@ -3,14 +3,24 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA', '.' ]
 
-  # Step 2: Push Docker image
+  # Step 2: Push Docker image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA' ]
 
-# Image to store
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', 'insurance-backend',
+        '--image', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA',
+        '--region', 'africa-south1',
+        '--platform', 'managed',
+        '--allow-unauthenticated'
+      ]
+
 images:
   - 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA'
 
-# 🔑 THIS FIXES THE SERVICE ACCOUNT LOGGING ERROR
 options:
   logging: CLOUD_LOGGING_ONLY
