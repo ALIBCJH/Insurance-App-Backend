@@ -3,14 +3,14 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA', '.' ]
 
-  # Step 2: Push Docker image to Google Container Registry
+  # Step 2: Push Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA' ]
 
-# Images to store in Container Registry
+# Image to store
 images:
   - 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA'
 
-# Options required when using a custom service account
+# 🔑 THIS FIXES THE SERVICE ACCOUNT LOGGING ERROR
 options:
-  logging: CLOUD_LOGGING_ONLY   # ✅ this is the fix
+  logging: CLOUD_LOGGING_ONLY
