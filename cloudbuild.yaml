@@ -1,9 +1,16 @@
 steps:
+  # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA', '.' ]
 
+  # Step 2: Push Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA' ]
+
+# Images to store in Container Registry
 images:
   - 'gcr.io/$PROJECT_ID/insurance-backend:$COMMIT_SHA'
 
+# Options required when using a custom service account
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY   # ✅ this is the fix
